@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTO mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.mapper.BoardMapper">
+
+	<sql id="criteria"> 
+    <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+        <foreach item='type' collection="typeArr">
+            <trim prefix="OR">
+                <choose>
+                    <when test="type == 'T'.toString()">
+                        title like '%'||#{keyword}||'%'
+                    </when>
+                    <when test="type == 'C'.toString()">
+                        content like '%'||#{keyword}||'%'
+                    </when>
+                    <when test="type == 'W'.toString()">
+                        writer like '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </trim>
+        </foreach>
+	 </trim>
+	</sql>
+	
+	<select id="getList" resultType="com.example.domain.BoardVO">
+	<![CDATA[
+		select * from board where bno > 0
+		]]>
+	</select>
+	
+	<insert id="insert">
+		insert into
+					board (bno, title,content,memberId,board_type)
+		values
+					(board_seq.nextval, #{title}, #{content}, #{memberId},#{board_type})
+		
+	</insert>
+	
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="bno" order="BEFORE" resultType="Long">
+			select board_seq.nextval from dual
+		</selectKey>
+			
+			insert into
+						board (bno, title,content,memberId,board_type)
+			values
+						(#{bno}, #{title}, #{content}, #{memberId},#{board_type})
+	</insert>
+	
+	<select id="read" resultType="com.example.domain.BoardVO">
+		select * from board where bno = #{bno}
+	</select>
+	
+	<delete id="delete">
+		delete board where bno = #{bno}
+	</delete>
+	
+	<update id="update">
+    	update 
+    			board
+   		set 
+   		 		title = #{title},
+        		content = #{content},
+       			writer = #{writer},
+       			board_type = #{board_type}
+   		where
+   				bno = #{bno}
+	</update>
+	
+	<update id="boardHit" parameterType="java.lang.Long">
+        update
+        		board
+        set 
+        		hit = hit + 1
+        where 
+        		bno = #{bno}
+    </update>
+
+	<select id="getListWithPaging" resultType="com.example.domain.BoardVO">
+	<![CDATA[
+		    select 
+		       		 bno, title, content, memberId, regdate, updatedate, hit, board_type
+		    from 
+		    		(
+        	select
+		            /*+INDEX_DESC(board board_pk)*/ rownum rn,
+		            bno, title, content, memberId, regdate, updatedate, hit, board_type
+	        from
+		            board
+	        where
+		            bno > 0
+	]]>   
+  
+    <if test="board_type != null">
+        	 AND
+         			board_type like '%'||#{board_type}||'%' <!-- 문자열로 변경 --><!-- if문 필요없음  -->
+    </if>
+    
+	<include refid="criteria"></include>
+    
+    <![CDATA[      
+	        and		 rownum <= #{pageNum} * #{amount}
+	    )
+	    	where
+	        		rn > (#{pageNum} - 1) * #{amount}
+	]]>
+	</select>
+	
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from board where
+		
+	<include refid="criteria"></include>
+
+		bno > 0		
+	</select>
+	
+<!-- <include refid="searchForm"></include> -->
+	<!-- 게시글의 카테고리 조회 -->
+	<select id="getBoardType" parameterType="long" resultType="int">
+	    select 
+	    		board_type
+   		from 
+   				board 
+		where 
+				bno = #{bno}
+	</select>
+<!-- 사용자 아이디 검증 -->
+    <select id="validateMember" parameterType="string" resultType="int">
+        select count(*)
+        from member1
+        where memberId = #{memberId}
+    </select>
+
+
+
+</mapper>

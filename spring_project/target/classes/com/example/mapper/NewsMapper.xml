@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTO mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+   
+<mapper namespace="com.example.mapper.NewsMapper">
+   
+   <!-- 회원가입 -->
+   <insert id="insertNews">
+   
+      insert into intnews values(#{memberId}, #{title}, #{originallink})
+   
+   </insert>
+   
+   <select id="getList" resultType="com.example.domain.IntnewsVO">
+	<![CDATA[
+		SELECT title
+		FROM (
+		    SELECT title
+		    FROM intnews
+		    GROUP BY title
+		    ORDER BY COUNT(*) DESC
+		)
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
+   
+
+</mapper>

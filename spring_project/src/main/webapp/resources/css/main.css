@@ -1,0 +1,174 @@
+@charset "UTF-8";
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+body{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(243, 244, 248);
+}
+
+
+.header{
+
+    width: 100%;
+    height: 50px;
+
+    position: fixed;
+    top: 0;
+
+    background-color: rgb(255,255,255);
+
+}
+
+.footer{
+    width: 100%;
+    height: 30px;
+
+    position: fixed;
+    bottom: 0;
+    background-color: rgb(255,255,255);
+
+}
+
+.content_body{
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(255,255,255);
+}
+
+.content_left_bar{
+    width: 200px;
+    height: 830px;
+
+    position: fixed; 
+    top: 90px;
+    left: 240px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.content_right_bar{
+
+    width: 250px;
+    height: 830px;
+
+    position: fixed; 
+    top: 90px;
+    right: 180px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content_center{
+
+    width: 1000px;
+    height: 820px;
+
+    position: fixed;
+    top: 90px;
+    left: 460px;
+    bottom: 200px;
+
+}
+
+.content_tab{
+
+    width: 100%;
+    height: 80px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 10px;
+
+    
+}
+
+.content_tab_menu{
+
+    width: 200px;
+    height: 60px;
+
+    margin: 10px;
+
+    border-radius: 15px;
+
+    background-color: rgb(255,255,255);
+}
+
+.content_main{
+    width: 100%;
+    height: 715px;
+    word-break:break-all;
+    overflow:scroll;
+
+    margin-top: 15px;
+
+    background-color: rgb(255,255,255);
+}
+
+.cr_chat_box{
+
+    width: 230px;
+    height: 400px;
+
+    margin: 20px;
+    border-radius: 15px;
+
+    background-color: rgb(255,255,255);
+}
+
+.cr_popular_news_box{
+
+    width: 230px;
+    height: 350px;
+
+    margin: 20px;
+    border-radius: 15px;
+
+    background-color: rgb(255,255,255);
+}
+
+.cl_user_info{
+
+    width: 190px;
+    height: 270px;
+
+    margin: 20px;
+    border-radius: 15px;
+
+    background-color: rgb(255,255,255);
+}
+
+.cl_nav_bar{
+
+    width: 190px;
+    height: 500px;
+
+    margin: 20px;
+    border-radius: 15px;
+
+    background-color: rgb(255,255,255);
+}

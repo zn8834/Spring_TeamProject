@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTO mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.CompanyBoardMapper">
+
+   <sql id="criteria">
+      <trim prefix="(" suffix=")AND" prefixOverrides="OR">
+            <foreach item='type' collection="typeArr">
+               <trim prefix="OR">
+                  <choose>
+                     <when test="type == 'T'.toString()">
+                        title like '%'||#{keyword}||'%'
+                     </when>
+                     <when test="type == 'C'.toString()">
+                        content like '%'||#{keyword}||'%'
+                     </when>
+                     <when test="type == 'W'.toString()">
+                        writer like '%'||#{keyword}||'%'
+                     </when>
+                  </choose>
+               </trim>
+            </foreach>
+         </trim>
+   </sql>
+   <select id="getList" resultType="com.example.domain.CompanyBoardVO">
+   <![CDATA[
+      select * from company_board where bno > 0
+      ]]>
+   </select>
+
+   <insert id="insert">
+      insert into 
+            company_board (bno,cno,title,content,writer)
+      values
+         (seq_companyboard.nextval,#{cno},#{title},#{content},#{writer})
+   </insert>
+   
+<!--    <insert id="insertSelectKey"> -->
+<!--       <selectKey keyProperty="bno" order="BEFORE" resultType="Long"> -->
+<!--          select seq_companyboard.nextval from dual -->
+<!--       </selectKey> -->
+<!--       insert into -->
+<!--                company_board (cno,bno,content,writer) -->
+<!--       values -->
+<!--                (#{cno},#{bno},#{content},#{writer}) -->
+      
+<!--    </insert> -->
+   
+   <select id="read" resultType="com.example.domain.CompanyBoardVO">
+      select * from company_board where bno = #{bno}
+   </select>
+
+   <delete id="delete">
+      delete from company_board where bno = #{bno}
+   </delete>
+   <update id="update">
+      update
+            company_board
+      set
+            title = #{title}, content=#{content},writer=#{writer}, updateDate = sysdate
+      where
+            bno = #{bno}
+   
+   </update>
+   
+   <select id="getListWithPaging" resultType="com.example.domain.CompanyBoardVO">
+      <![CDATA[
+         select
+               cno, bno, title, content, writer, regdate,updatedate
+         from (
+               select
+                     /*+INDEX_DESC(company_board pk_company_board)+*/ rownum rn,
+                     cno, bno, title, content, writer, regdate,updatedate
+               from
+                  company_board
+               where
+                  cno = #{cno}
+               and   
+      ]]>
+<!--          <include refid="criteria"></include> -->
+<!--          <trim prefix="(" suffix=")AND" prefixOverrides="OR"> -->
+<!--             <foreach item='type' collection="typeArr"> -->
+<!--                <trim prefix="OR"> -->
+<!--                   <choose> -->
+<!--                      <when test="type == 'T'.toString()"> -->
+<!--                         title like '%'||#{keyword}||'%' -->
+<!--                      </when> -->
+<!--                      <when test="type == 'C'.toString()"> -->
+<!--                         content like '%'||#{keyword}||'%' -->
+<!--                      </when> -->
+<!--                      <when test="type == 'W'.toString()"> -->
+<!--                         writer like '%'||#{keyword}||'%' -->
+<!--                      </when> -->
+<!--                   </choose> -->
+<!--                </trim> -->
+<!--             </foreach> -->
+<!--          </trim> -->
+      
+      <![CDATA[
+                  rownum <= #{cri.pageNum} * #{cri.amount}
+            )
+         where
+               rn > (#{cri.pageNum}-1) * #{cri.amount}
+      
+      ]]>
+   </select>
+   
+   <select id="getTotalCount" resultType="int">
+         select count(*) from company_board where
+         <include refid="criteria"></include>
+<!--          <trim prefix="(" suffix=")AND" prefixOverrides="OR"> -->
+<!--             <foreach item='type' collection="typeArr"> -->
+<!--                <trim prefix="OR"> -->
+<!--                   <choose> -->
+<!--                      <when test="type == 'T'.toString()"> -->
+<!--                         title like '%'||#{keyword}||'%' -->
+<!--                      </when> -->
+<!--                      <when test="type == 'C'.toString()"> -->
+<!--                         content like '%'||#{keyword}||'%' -->
+<!--                      </when> -->
+<!--                      <when test="type == 'W'.toString()"> -->
+<!--                         writer like '%'||#{keyword}||'%' -->
+<!--                      </when> -->
+<!--                   </choose> -->
+<!--                </trim> -->
+<!--             </foreach> -->
+<!--          </trim> -->
+          bno > 0
+   </select>
+   
+</mapper>
